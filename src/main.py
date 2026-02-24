@@ -36,7 +36,7 @@ def agregar_libro(libros: list[Libro]) -> None:
 
     libro = Libro(titulo, autor, isbn)
     libros.append(libro)
-    print("✅ Libro agregado correctamente.")
+    print(" Libro agregado correctamente.")
 
 
 def prestar_libro(libros: list[Libro]) -> None:
