@@ -43,7 +43,7 @@ class Libro:
     # UPDATE
     # =========================
 
-    def actualizar_datos(
+    def actualizar_datos_libro(
         self, titulo: str | None = None, autor: str | None = None
     ) -> None:
         """
@@ -59,7 +59,7 @@ class Libro:
     # OPERACIONES DE NEGOCIO
     # =========================
 
-    def prestar(self) -> None:
+    def prestar_libro(self) -> None:
         """
         Marca el libro como prestado si está disponible.
         """
@@ -70,7 +70,7 @@ class Libro:
         self._disponible = False
         print(f"El libro '{self._titulo}' ha sido prestado.")
 
-    def devolver(self) -> None:
+    def devolver_libro(self) -> None:
         """
         Marca el libro como disponible nuevamente.
         """
@@ -86,14 +86,14 @@ class Libro:
     # =========================
 
     @staticmethod
-    def buscar_por_autor(libros: List["Libro"], autor: str) -> List["Libro"]:
+    def buscar_libro_x_autor(libros: List["Libro"], autor: str) -> List["Libro"]:
         """
         Busca libros por nombre de autor.
         """
         return [libro for libro in libros if libro.autor.lower() == autor.lower()]
 
     @staticmethod
-    def buscar_por_isbn(libros: List["Libro"], isbn: str) -> "Libro | None":
+    def buscar_libro_x_isbn(libros: List["Libro"], isbn: str) -> "Libro | None":
         """
         Busca un libro por ISBN.
         """
