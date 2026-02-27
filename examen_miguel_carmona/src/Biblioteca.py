@@ -36,3 +36,14 @@ class Biblioteca:
                 return
 
         print("Libro no encontrado")
+
+    def devolver_libro(self, titulo: str) -> None:
+        for libro in self._libros:
+            if libro.obtener_titulo() == titulo:
+                if not libro.esta_disponible():
+                    libro.devolver()
+                    print("Libro devuelto correctamente")
+                else:
+                    print("El libro ya estaba disponible")
+                return
+        print("Libro no encontrado")

@@ -12,7 +12,8 @@ def main() -> None:
         print("2. Agregar libro")
         print("3. Mostrar libros")
         print("4. Prestar libro")
-        print("5. Salir")
+        print("5. Devolver libro")
+        print("6. Salir ")
 
         opcion = input("Seleccione una opcion: ")
 
@@ -40,6 +41,11 @@ def main() -> None:
             print()
 
         elif opcion == "5":
+            titulo = input("Titulo del libro a devolver: ")
+            biblioteca.devolver_libro(titulo)
+            print()
+
+        elif opcion == "6":
             print("Saliendo del sistema...")
             break
 
