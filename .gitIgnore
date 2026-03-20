@@ -40,3 +40,5 @@ htmlcov/
 build/
 dist/
 *.egg-info/
+# 🔹 Archivo específico de pruebas
+test_db.py
