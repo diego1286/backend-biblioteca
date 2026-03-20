@@ -1,46 +1,35 @@
 """
-Configuración de la base de datos PostgreSQL con Neon
+Configuracion de la base de datos PostgreSQL.
+conexion mediante variables de entorno (.env)
 """
 
-from sqlalchemy.orm.session import Session
-
-
 import os
-
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
-# Cargar variables de entorno
 load_dotenv()
 
-# Configuración de la base de datos Neon PostgreSQL
-# Obtener la URL completa de conexión desde las variables de entorno
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 if not DATABASE_URL:
-    raise ValueError("Se requiere DATABASE_URL en las variables de entorno")
+    raise ValueError("Se requiere url de conexion fichero .env")
 
-# Crear el motor de SQLAlchemy
 engine = create_engine(
     DATABASE_URL,
-    echo=False,  # Cambiar a True para ver consultas SQL
-    pool_pre_ping=True,  # Verificar conexión antes de usar
-    pool_recycle=300,  # Reciclar conexiones cada 5 minutos
-    connect_args={"sslmode": "require"},  # Requerir SSL para Neon
+    echo=False,
+    pool_pre_ping=True,
+    pool_recycle=300,
+    connect_args={"sslmode": "require"} if "neon.tech" in (DATABASE_URL or "") else {},
 )
 
-# Crear la sesión
-SessionLocal = sessionmaker[Session](autocommit=False, autoflush=False, bind=engine)
-
-# Base para los modelos
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
 
 def get_db():
-    """
-    Generador de sesiones de base de datos
-    """
+    """Generador de sesiones de base de datoos"""
     db = SessionLocal()
     try:
         yield db
@@ -49,22 +38,5 @@ def get_db():
 
 
 def create_tables():
-    """
-    Crear todas las tablas definidas en los modelos
-    """
+    """Crear todas las tablas definidas en los modelos"""
     Base.metadata.create_all(bind=engine)
-
-
-from sqlalchemy import text
-
-
-def test_connection():
-    try:
-        with engine.connect() as conn:
-            result = conn.execute(text("SELECT 1"))
-            print("Conexión exitosa:", result.fetchone())
-    except Exception as e:
-        print("Error de conexión:", e)
-
-
-test_connection()
