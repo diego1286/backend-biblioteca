@@ -1,135 +1,67 @@
 """
-Modelo de Usuario con auditoría.
-
-Este módulo define la entidad Usuario para la base de datos,
-incluyendo campos de auditoría para control de creación y edición.
+Entidad persona: base de la trazabilidad.
+Las demas entidades referencia a Persona en id_usuario e id_usuario_edita
 """
 
 import uuid
+from datetime import datetime
+from typing import Optional
+from uuid import UUID
 
-from sqlalchemy import Boolean, Column, DateTime, ForeignKey, String
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import relationship
+from pydantic import BaseModel, EmailStr, Field
+from sqlalchemy import Boolean, Column, DateTime, String
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.sql import func
 
-from database.config import Base
+from src.database.config import Base
 
 
 class Usuario(Base):
-    """
-    Representa la tabla de usuarios en la base de datos.
+    """Modelo ORM Persona. Es quien crea/edita registros (trazabilidad)."""
 
-    Incluye información básica del usuario y campos de auditoría
-    para rastrear quién crea y modifica los registros.
-    """
-
-    __tablename__ = "tbl_usuarios"
+    __tablename__ = "usuario"
 
     id_usuario = Column(
-        UUID(as_uuid=True),
-        primary_key=True,
-        default=uuid.uuid4,
-        index=True,
-        doc="Identificador único del usuario (UUID).",
+        PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True
     )
 
-    nombre = Column(
-        String(100),
-        nullable=False,
-        doc="Nombre completo del usuario.",
-    )
+    nombre_usuario = Column(String(150), nullable=False)
+    activo = Column(Boolean, default=True)
+    rol = Column(String(50), nullable=False)
+    contrasena = Column(String(255), nullable=False)
 
-    nombre_usuario = Column(
-        String(50),
-        unique=True,
-        index=True,
-        nullable=False,
-        doc="Nombre de usuario único.",
-    )
+    fecha_creacion = Column(DateTime(timezone=True), server_default=func.now())
+    fecha_edicion = Column(DateTime(timezone=True), onupdate=func.now())
 
-    email = Column(
-        String(150),
-        unique=True,
-        index=True,
-        nullable=False,
-        doc="Correo electrónico del usuario.",
-    )
 
-    contrasena_hash = Column(
-        String(255),
-        nullable=False,
-        doc="Contraseña del usuario en formato hash.",
-    )
+class PersonaBase(BaseModel):
+    """Esquema base con validaciones simples."""
 
-    telefono = Column(
-        String(20),
-        nullable=True,
-        doc="Número de teléfono del usuario.",
-    )
+    nombre: str = Field(..., min_length=1, max_length=150)
+    email: EmailStr
+    activo: bool = True
 
-    activo = Column(
-        Boolean,
-        default=True,
-        doc="Indica si el usuario está activo.",
-    )
 
-    es_admin = Column(
-        Boolean,
-        default=False,
-        doc="Indica si el usuario tiene privilegios de administrador.",
-    )
+class PersonaCreate(PersonaBase):
+    """Esquema para creación."""
 
-    # Auditoría
+    pass
 
-    fecha_creacion = Column(
-        DateTime(timezone=True),
-        server_default=func.now(),
-        nullable=False,
-        doc="Fecha de creación del registro.",
-    )
 
-    fecha_edicion = Column(
-        DateTime(timezone=True),
-        onupdate=func.now(),
-        doc="Fecha de última edición del registro.",
-    )
+class PersonaUpdate(BaseModel):
+    """Esquema para actualización parcial."""
 
-    id_usuario_creacion = Column(
-        UUID(as_uuid=True),
-        ForeignKey("tbl_usuarios.id_usuario"),
-        nullable=False,
-        doc="ID del usuario que creó el registro.",
-    )
+    nombre_usuario: Optional[str] = Field(None, min_length=1, max_length=150)
+    email: Optional[EmailStr] = None
+    activo: Optional[bool] = None
 
-    id_usuario_edita = Column(
-        UUID(as_uuid=True),
-        ForeignKey("tbl_usuarios.id_usuario"),
-        nullable=True,
-        doc="ID del usuario que realizó la última edición.",
-    )
 
-    # Relaciones
+class PersonaResponse(PersonaBase):
+    """Esquema de respuesta (lectura)."""
 
-    usuario_creador = relationship(
-        "Usuario",
-        foreign_keys=[id_usuario_creacion],
-        backref="usuarios_creados",
-        doc="Relación al usuario que creó este registro.",
-    )
+    id_usuario: UUID
+    fecha_creacion: datetime
+    fecha_edicion: Optional[datetime] = None
 
-    usuario_editor = relationship(
-        "Usuario",
-        foreign_keys=[id_usuario_edita],
-        backref="usuarios_editados",
-        doc="Relación al usuario que editó este registro.",
-    )
-
-    def __repr__(self) -> str:
-        """
-        Returns:
-            str: Cadena representativa del usuario.
-        """
-        return (
-            f"<Usuario(id_usuario={self.id_usuario}, "
-            f"nombre='{self.nombre}', email='{self.email}')>"
-        )
+    class Config:
+        from_attributes = True
