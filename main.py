@@ -18,6 +18,8 @@ from src.crud import Prestamo as crud_prestamo
 from src.crud import Usuario as crud_usuario
 from src.crud import Empleado as crud_empleado
 from src.crud import Reserva as crud_reserva
+from src.crud import Categoria as crud_categoria
+from src.crud import Editorial as crud_editorial
 from src.entities.Empleado import Empleado
 
 
@@ -320,6 +322,166 @@ def menu_reserva():
         elif op == 0:
             break
 
+def menu_categoria():
+
+    while True:
+
+        print("\n--- CATEGORIA ---")
+
+        print("1. Crear categoria")
+
+        print("2. Listar categorias")
+
+        print("3. Buscar categoria")
+
+        print("4. Actualizar categoria")
+
+        print("5. Eliminar categoria")
+
+        print("0. Volver")
+ 
+        op = leer_int("Opción: ")
+ 
+        if op == 1:
+
+            nombre = leer_str("Nombre: ")
+
+            descripcion = leer_str("Descripcion: ")
+ 
+            c = crud_categoria.crear_categoria(nombre, descripcion)
+
+            print("Categoria creada:", c.id_categoria)
+ 
+        elif op == 2:
+
+            categorias = crud_categoria.obtener_categorias()
+
+            for c in categorias:
+
+                print(c.id_categoria, c.nombre)
+ 
+        elif op == 3:
+
+            nombre = leer_str("Buscar nombre: ")
+
+            resultados = crud_categoria.buscar_categoria_por_nombre(nombre)
+
+            for c in resultados:
+
+                print(c.id_categoria, c.nombre)
+ 
+        elif op == 4:
+
+            id_categoria = leer_uuid("ID: ")
+
+            nombre = leer_str("Nuevo nombre: ")
+
+            descripcion = leer_str("Nueva descripcion: ")
+ 
+            crud_categoria.actualizar_categoria(
+
+                id_categoria,
+
+                nombre=nombre,
+
+                descripcion=descripcion,
+
+            )
+
+            print("Actualizado")
+ 
+        elif op == 5:
+
+            id_categoria = leer_uuid("ID: ")
+
+            crud_categoria.eliminar_categoria(id_categoria)
+
+            print("Eliminado")
+ 
+        elif op == 0:
+
+            break
+ 
+def menu_editorial():
+
+    while True:
+
+        print("\n--- EDITORIAL ---")
+
+        print("1. Crear editorial")
+
+        print("2. Listar editoriales")
+
+        print("3. Buscar editorial")
+
+        print("4. Actualizar editorial")
+
+        print("5. Eliminar editorial")
+
+        print("0. Volver")
+ 
+        op = leer_int("Opción: ")
+ 
+        if op == 1:
+
+            nombre = leer_str("Nombre: ")
+
+            pais = leer_str("Pais: ")
+ 
+            e = crud_editorial.crear_editorial(nombre, pais)
+
+            print("Editorial creada:", e.id_editorial)
+ 
+        elif op == 2:
+
+            editoriales = crud_editorial.obtener_editoriales()
+
+            for e in editoriales:
+
+                print(e.id_editorial, e.nombre, e.pais)
+ 
+        elif op == 3:
+
+            nombre = leer_str("Buscar nombre: ")
+
+            resultados = crud_editorial.buscar_editorial_por_nombre(nombre)
+
+            for e in resultados:
+
+                print(e.id_editorial, e.nombre)
+ 
+        elif op == 4:
+
+            id_editorial = leer_uuid("ID: ")
+
+            nombre = leer_str("Nuevo nombre: ")
+
+            pais = leer_str("Nuevo pais: ")
+ 
+            crud_editorial.actualizar_editorial(
+
+                id_editorial,
+
+                nombre=nombre,
+
+                pais=pais,
+
+            )
+
+            print("Actualizado")
+ 
+        elif op == 5:
+
+            id_editorial = leer_uuid("ID: ")
+
+            crud_editorial.eliminar_editorial(id_editorial)
+
+            print("Eliminado")
+ 
+        elif op == 0:
+
+            break
+ 
 
 def main():
     while True:
@@ -331,6 +493,8 @@ def main():
         print("5. Usuario")
         print("6. Empleado")
         print("7. Reserva")
+        print("8. Categoria")
+        print("9. Editorial")
         print("0. Salir")
 
         op = leer_int("Seleccione: ")
@@ -349,6 +513,10 @@ def main():
             menu_empleado()
         elif op == 7:
             menu_reserva()
+        elif op == 8:
+            menu_categoria()
+        elif op == 9:
+            menu_editorial()
         elif op == 0:
             print("Saliendo...")
             break
