@@ -1,7 +1,8 @@
 from sqlalchemy.orm import Session
-from src.Entidades.Prestamo import Prestamo
-from src.Entidades.Detalle_Prestamo import DetallePrestamo
-from src.Entidades.multa import Multa
+# Estructura corregida según las carpetas del proyecto general
+from entities.Prestamo import Prestamo
+from entities.Detalle_Prestamo import DetallePrestamo
+from entities.multa import Multa
 
 class PrestamoService:
     # CREAR UN PRESTAMO
