@@ -3,6 +3,7 @@ from uuid import UUID
 
 from src.database.config import SessionLocal
 from src.entities.Prestamo import Prestamo
+from datetime import date
 
 db = SessionLocal()
 
@@ -10,9 +11,9 @@ db = SessionLocal()
 def crear_prestamo(
     id_usuario: UUID,
     id_empleado: UUID,
-    fecha_prestamo: Date,
-    fecha_devolucion_estimada: Date,
-    fecha_devolucion_real: Date,
+    fecha_prestamo: date,
+    fecha_devolucion_estimada: date,
+    fecha_devolucion_real: date,
     estado: str,
     id_usuario_crea: UUID,
 ) -> Prestamo:

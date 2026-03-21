@@ -12,7 +12,7 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
-from database.config import Base
+from src.database.config import Base
 
 
 class Reserva(Base):
@@ -20,7 +20,7 @@ class Reserva(Base):
     Representa una reserva de un libro realizada por un usuario.
     """
 
-    __tablename__ = "tbl_reservas"
+    __tablename__ = "reservas"
 
     id_reserva = Column(
         UUID(as_uuid=True),
@@ -32,14 +32,14 @@ class Reserva(Base):
 
     id_usuario = Column(
         UUID(as_uuid=True),
-        ForeignKey("tbl_usuarios.id_usuario"),
+        ForeignKey("usuario.id_usuario"),
         nullable=False,
         doc="ID del usuario que realiza la reserva.",
     )
 
     id_libro = Column(
         UUID(as_uuid=True),
-        ForeignKey("tbl_libros.id_libro"),
+        ForeignKey("libro.id_libro"),
         nullable=False,
         doc="ID del libro reservado.",
     )
@@ -68,14 +68,14 @@ class Reserva(Base):
 
     id_usuario_creacion = Column(
         UUID(as_uuid=True),
-        ForeignKey("tbl_usuarios.id_usuario"),
+        ForeignKey("usuario.id_usuario"),
         nullable=False,
         doc="Usuario que creó la reserva.",
     )
 
     id_usuario_edita = Column(
         UUID(as_uuid=True),
-        ForeignKey("tbl_usuarios.id_usuario"),
+        ForeignKey("usuario.id_usuario"),
         nullable=True,
         doc="Usuario que editó la reserva.",
     )
