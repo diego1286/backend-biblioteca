@@ -1,4 +1,4 @@
-"""
+﻿"""
 Entidad Libro
 """
 
@@ -21,6 +21,18 @@ class Libro(Base):
     titulo = Column(String(255), nullable=False)
     isbn = Column(String(50), nullable=False, unique=True)
     anio_publicacion = Column(Integer, nullable=False)
+
+    id_editorial = Column(
+        PG_UUID(as_uuid=True),
+        ForeignKey("tbl_editoriales.id_editorial"),
+        nullable=False,
+    )
+
+    id_categoria = Column(
+        PG_UUID(as_uuid=True),
+        ForeignKey("tbl_categorias.id_categoria"),
+        nullable=False,
+    )
 
     # Trazabilidad
     id_usuario_crea = Column(

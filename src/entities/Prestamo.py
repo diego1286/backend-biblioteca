@@ -1,4 +1,4 @@
-"""
+﻿"""
 Entidad Prestamo
 """
 
@@ -20,6 +20,10 @@ class Prestamo(Base):
 
     id_usuario = Column(
         PG_UUID(as_uuid=True), ForeignKey("usuario.id_usuario"), nullable=False
+    )
+
+    id_empleado = Column(
+        PG_UUID(as_uuid=True), ForeignKey("empleados.id_empleado"), nullable=False
     )
 
     fecha_prestamo = Column(Date, nullable=False)

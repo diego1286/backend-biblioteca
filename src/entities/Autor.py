@@ -34,3 +34,4 @@ class Autor(Base):
     fecha_creacion = Column(DateTime(timezone=True), server_default=func.now())
 
     fecha_edicion = Column(DateTime(timezone=True), onupdate=func.now())
+
