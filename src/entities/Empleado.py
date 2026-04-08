@@ -12,7 +12,7 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
-from database.config import Base
+from src.database.config import Base
 
 
 class Empleado(Base):
@@ -23,7 +23,7 @@ class Empleado(Base):
     información adicional laboral.
     """
 
-    __tablename__ = "tbl_empleados"
+    __tablename__ = "empleados"
 
     id_empleado = Column(
         UUID(as_uuid=True),
@@ -35,7 +35,7 @@ class Empleado(Base):
 
     id_usuario = Column(
         UUID(as_uuid=True),
-        ForeignKey("tbl_usuarios.id_usuario"),
+        ForeignKey("usuario.id_usuario"),
         nullable=False,
         unique=True,
         doc="ID del usuario asociado al empleado.",
@@ -89,14 +89,14 @@ class Empleado(Base):
 
     id_usuario_creacion = Column(
         UUID(as_uuid=True),
-        ForeignKey("tbl_usuarios.id_usuario"),
+        ForeignKey("usuario.id_usuario"),
         nullable=False,
         doc="Usuario que creó el registro.",
     )
 
     id_usuario_edita = Column(
         UUID(as_uuid=True),
-        ForeignKey("tbl_usuarios.id_usuario"),
+        ForeignKey("usuario.id_usuario"),
         nullable=True,
         doc="Usuario que realizó la última edición.",
     )

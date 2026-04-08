@@ -3,11 +3,7 @@ from uuid import UUID
 from sqlalchemy.orm import Session
 
 from src.entities.Prestamo import Prestamo
-from src.schemas.Prestamo import PrestamoCreate, PrestamoUpdate, PrestamoResponse
 
-
-def crear_prestamo(db: Session, data: PrestamoCreate) -> Prestamo:
-    prestamo = Prestamo(**data.model_dump())
 
     db.add(prestamo)
     db.commit()
