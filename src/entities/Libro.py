@@ -3,7 +3,6 @@ Entidad Libro
 """
 
 import uuid
-
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.sql import func

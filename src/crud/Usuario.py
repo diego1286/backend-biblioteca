@@ -1,25 +1,15 @@
 from typing import List, Optional
 from uuid import UUID
+from sqlalchemy.orm import Session
 
-from src.database.config import SessionLocal
 from src.entities.Usuario import Usuario
+from src.schemas.Usuario import UsuarioCreate, UsuarioUpdate
 
-db = SessionLocal()
 
+# crear usuario
+def crear_usuario(db: Session, data: UsuarioCreate) -> Usuario:
 
-def crear_usuario(
-    nombre_usuario: str,
-    rol: str,
-    contrasena: str,
-    activo: bool = True,
-) -> Usuario:
-
-    usuario = Usuario(
-        nombre_usuario=nombre_usuario.strip(),
-        rol=rol.strip(),
-        contrasena=contrasena.strip(),
-        activo=activo,
-    )
+    usuario = Usuario(**data.model_dump())
 
     db.add(usuario)
     db.commit()
@@ -27,34 +17,28 @@ def crear_usuario(
     return usuario
 
 
-def obtener_usuario_por_id(id_usuario: UUID) -> Optional[Usuario]:
+# obtener por ID
+def obtener_usuario_por_id(db: Session, id_usuario: UUID) -> Optional[Usuario]:
     return db.query(Usuario).filter(Usuario.id_usuario == id_usuario).first()
 
 
-def obtener_usuarios() -> List[Usuario]:
+# obtener usuarios
+def obtener_usuarios(db: Session) -> List[Usuario]:
     return db.query(Usuario).all()
 
 
+# Actualizar Usuario
 def actualizar_usuario(
-    id_usuario: UUID,
-    **kwargs,
+    db: Session, id_usuario: UUID, data: UsuarioUpdate
 ) -> Optional[Usuario]:
 
-    usuario = obtener_usuario_por_id(id_usuario)
+    usuario = obtener_usuario_por_id(db, id_usuario)
     if not usuario:
         return None
 
-    # Limpiar strings
-    if "nombre_usuario" in kwargs:
-        kwargs["nombre_usuario"] = kwargs["nombre_usuario"].strip()
-
-    if "rol" in kwargs:
-        kwargs["rol"] = kwargs["rol"].strip()
-
-    if "contrasena" in kwargs:
-        kwargs["contrasena"] = kwargs["contrasena"].strip()
-
-    for key, value in kwargs.items():
+    for key, value in data.model_dump(exclude_unset=True).items():
+        if isinstance(value, str):
+            value = value.strip()
         setattr(usuario, key, value)
 
     db.commit()
@@ -62,8 +46,9 @@ def actualizar_usuario(
     return usuario
 
 
-def eliminar_usuario(id_usuario: UUID) -> bool:
-    usuario = obtener_usuario_por_id(id_usuario)
+# Eliminar Usuario
+def eliminar_usuario(db: Session, id_usuario: UUID) -> bool:
+    usuario = obtener_usuario_por_id(db, id_usuario)
     if not usuario:
         return False
 
