@@ -6,7 +6,7 @@ from src.database.config import get_db
 from src.schemas.Autor import AutorCreate, AutorResponde, AutorUpdate
 from src.crud.Autor import *
 
-router = APIRouter(prefix="/autores", tags=["Atores"])
+router = APIRouter(prefix="/autores", tags=["Autores"])
 
 
 # crear un autor
@@ -18,7 +18,7 @@ def crear(autor: AutorCreate, db: Session = Depends(get_db)):
 # obtener autor
 @router.get("/", response_model=list[AutorResponde])
 def obtener(db: Session = Depends(get_db)):
-    return obtener_autores
+    return obtener_autores(db)
 
 
 # Obtener autor por ID
