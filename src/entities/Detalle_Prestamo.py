@@ -2,7 +2,7 @@ import uuid
 from sqlalchemy import Column, ForeignKey, Integer
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
-from database.config import Base
+from src.database.config import Base
 
 class DetallePrestamo(Base):
     __tablename__ = "tbl_detalles_prestamos"
