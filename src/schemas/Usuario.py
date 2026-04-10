@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from typing import Optional
 from uuid import UUID
 from datetime import datetime
@@ -6,14 +6,24 @@ from datetime import datetime
 
 # Clase base de usuario
 class UsuarioBase(BaseModel):
-    nombre_usuario: str = Field(..., min_length=1, max_length=50)
-    rol: str = Field(..., min_length=1, max_length=100)
+    nombre_usuario: str = Field(..., min_length=1, max_length=150)
+    rol: str = Field(..., min_length=1, max_length=50)
     activo: bool = True
+
+    @field_validator("nombre_usuario", "rol")
+    @classmethod
+    def limpiar_texto(cls, value):
+        return value.strip().title()
 
 
 # crear usuario
 class UsuarioCreate(UsuarioBase):
     contrasena: str = Field(..., min_length=6)
+
+    @field_validator("contrasena")
+    @classmethod
+    def limpiar_password(cls, value):
+        return value.strip()
 
 
 # Actualizar usuario

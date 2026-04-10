@@ -4,7 +4,6 @@ from uuid import UUID
 from datetime import date, datetime
 
 
-# clase Base
 class PrestamoBase(BaseModel):
     id_usuario: UUID
     fecha_prestamo: date
@@ -17,19 +16,25 @@ class PrestamoBase(BaseModel):
         return value.strip().lower()
 
 
-#  Crear
 class PrestamoCreate(PrestamoBase):
     id_usuario_crea: Optional[UUID]
 
+    @field_validator("fecha_devolucion_estimada")
+    @classmethod
+    def validar_fechas(cls, value, values):
+        if "fecha_prestamo" in values and value < values["fecha_prestamo"]:
+            raise ValueError(
+                "La fecha estimada no puede ser menor a la fecha de préstamo"
+            )
+        return value
 
-#  Actualizar
+
 class PrestamoUpdate(BaseModel):
     fecha_devolucion_real: Optional[date] = None
     estado: Optional[str] = None
     id_usuario_edita: UUID
 
 
-#  Respuesta
 class PrestamoResponse(PrestamoBase):
     id_prestamo: UUID
     fecha_devolucion_real: Optional[date]

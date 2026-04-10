@@ -9,7 +9,12 @@ from src.schemas.Usuario import UsuarioCreate, UsuarioUpdate
 # crear usuario
 def crear_usuario(db: Session, data: UsuarioCreate) -> Usuario:
 
-    usuario = Usuario(**data.model_dump())
+    usuario = Usuario(
+        nombre_usuario=data.nombre_usuario.strip().title(),
+        rol=data.rol.strip().lower(),
+        contrasena=data.contrasena.strip(),
+        activo=data.activo,
+    )
 
     db.add(usuario)
     db.commit()

@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from uuid import UUID
 
 from src.database.config import get_db
-from src.schemas.Ejemplar import CreateEjemplar, updateEjemplar, EjemplarResponse
+from src.schemas.Ejemplar import EjemplarCreate, EjemplarUpdate, EjemplarResponse
 from src.crud.Ejemplar import *
 
 
@@ -11,7 +11,7 @@ router = APIRouter(prefix="/ejemplares", tags=["Ejemplares"])
 
 
 @router.post("/", response_model=EjemplarResponse)
-def crear(data: CreateEjemplar, db: Session = Depends(get_db)):
+def crear(data: EjemplarCreate, db: Session = Depends(get_db)):
     try:
         return crear_Ejemplar(db, data)
     except ValueError as e:
@@ -34,7 +34,7 @@ def obtener(id_ejemplar: UUID, db: Session = Depends(get_db)):
 
 
 @router.put("/{id_ejemplar}", response_model=EjemplarResponse)
-def actualizar(id_ejemplar: UUID, data: updateEjemplar, db: Session = Depends(get_db)):
+def actualizar(id_ejemplar: UUID, data: EjemplarUpdate, db: Session = Depends(get_db)):
     try:
         ejemplar = actualizar_ejemplar(db, id_ejemplar, data)
 

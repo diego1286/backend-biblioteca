@@ -4,11 +4,6 @@ Las demas entidades referencia a Persona en id_usuario e id_usuario_edita
 """
 
 import uuid
-from datetime import datetime
-from typing import Optional
-from uuid import UUID
-
-from pydantic import BaseModel, EmailStr, Field
 from sqlalchemy import Boolean, Column, DateTime, String
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.sql import func
@@ -17,7 +12,6 @@ from src.database.config import Base
 
 
 class Usuario(Base):
-    """Modelo ORM Persona. Es quien crea/edita registros (trazabilidad)."""
 
     __tablename__ = "usuario"
 

@@ -3,7 +3,15 @@ from uuid import UUID
 from sqlalchemy.orm import Session
 
 from src.entities.Prestamo import Prestamo
+from src.schemas.Prestamo import PrestamoCreate, PrestamoUpdate
 
+
+def crear_prestamo(db: Session, data: PrestamoCreate) -> Prestamo:
+
+    if data.fecha_devolucion_estimada < data.fecha_prestamo:
+        raise ValueError("Fecha estimada inválida")
+
+    prestamo = Prestamo(**data.model_dump())
 
     db.add(prestamo)
     db.commit()
@@ -24,10 +32,21 @@ def actualizar_prestamo(
 ) -> Optional[Prestamo]:
 
     prestamo = obtener_prestamo_por_id(db, id_prestamo)
+
     if not prestamo:
         return None
 
-    for key, value in data.model_dump(exclude_unset=True).items():
+    update_data = data.model_dump(exclude_unset=True)
+
+    # Validaciones
+    if "fecha_devolucion_real" in update_data:
+        if update_data["fecha_devolucion_real"] < prestamo.fecha_prestamo:
+            raise ValueError("Fecha de devolución inválida")
+
+    if "estado" in update_data and isinstance(update_data["estado"], str):
+        update_data["estado"] = update_data["estado"].strip().lower()
+
+    for key, value in update_data.items():
         setattr(prestamo, key, value)
 
     db.commit()
@@ -37,6 +56,7 @@ def actualizar_prestamo(
 
 def eliminar_prestamo(db: Session, id_prestamo: UUID) -> bool:
     prestamo = obtener_prestamo_por_id(db, id_prestamo)
+
     if not prestamo:
         return False
 

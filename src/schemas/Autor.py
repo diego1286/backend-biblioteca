@@ -4,12 +4,11 @@ from typing import Optional
 from datetime import datetime
 
 
-# Crear autor
-class AutoBase(BaseModel):
+# Base
+class AutorBase(BaseModel):
     nombre: str = Field(..., min_length=2, max_length=100)
     apellido: str = Field(..., min_length=2, max_length=100)
     nacionalidad: str = Field(..., min_length=2, max_length=100)
-    id_usuario_crea: Optional[UUID]
 
     @field_validator("nombre", "apellido", "nacionalidad")
     @classmethod
@@ -17,10 +16,12 @@ class AutoBase(BaseModel):
         return value.strip().title()
 
 
-class AutorCreate(AutoBase):
+# Crear
+class AutorCreate(AutorBase):
     id_usuario_crea: Optional[UUID]
 
 
+# Actualizar
 class AutorUpdate(BaseModel):
     nombre: Optional[str] = None
     apellido: Optional[str] = None
@@ -28,7 +29,8 @@ class AutorUpdate(BaseModel):
     id_usuario_edita: UUID
 
 
-class AutorResponde(AutoBase):
+# Respuesta
+class AutorResponse(AutorBase):
     id_autor: UUID
     fecha_creacion: Optional[datetime]
 
