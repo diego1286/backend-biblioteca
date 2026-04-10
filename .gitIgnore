@@ -30,6 +30,7 @@ Thumbs.db
 
 # 🔹 Variables de entorno (IMPORTANTE para seguridad)
 .env
+.env.*
 
 # 🔹 Archivos de pruebas
 .coverage
