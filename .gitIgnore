@@ -1,0 +1,45 @@
+# 🔹 Archivos compilados de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 🔹 Entornos virtuales
+venv/
+env/
+.venv/
+
+# 🔹 Archivos de configuración del sistema
+.DS_Store
+Thumbs.db
+
+# 🔹 Configuración de editores
+.vscode/
+.idea/
+
+# 🔹 Archivos de logs
+*.log
+
+# 🔹 Base de datos local (si usas SQLite por ejemplo)
+*.db
+*.sqlite3
+
+# 🔹 Archivos temporales
+*.tmp
+*.temp
+
+# 🔹 Variables de entorno (IMPORTANTE para seguridad)
+.env
+.env.*
+
+# 🔹 Archivos de pruebas
+.coverage
+htmlcov/
+.pytest_cache/
+
+# 🔹 Archivos de distribución
+build/
+dist/
+*.egg-info/
+# 🔹 Archivo específico de pruebas
+test_db.py
