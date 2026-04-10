@@ -15,8 +15,10 @@ from sqlalchemy.exc import OperationalError
 import src.entities.Autor
 import src.entities.Ejemplar
 import src.entities.Libro
-import src.entities.Prestamo
+import src.entities.Detalle_prestamo
 import src.entities.Usuario
+import src.entities.Prestamo
+import src.entities.multa
 from src.database.config import create_tables
 
 
@@ -34,3 +36,6 @@ except OperationalError as e:
     else:
         print("Error de conexion a la base de datos:", e)
     raise SystemExit(1)
+
+
+
