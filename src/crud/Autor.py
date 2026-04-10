@@ -2,9 +2,8 @@ from typing import List, Optional
 from uuid import UUID
 from sqlalchemy.orm import Session
 
-
 from src.entities.Autor import Autor
-from src.schemas.Autor import AutorCreate
+from src.schemas.Autor import AutorCreate, AutorUpdate
 
 
 def crear_autor(db: Session, autor_data: AutorCreate) -> Autor:
@@ -24,12 +23,16 @@ def obtener_autores(db: Session) -> List[Autor]:
     return db.query(Autor).all()
 
 
-def actualizar_autor(db: Session, id_autor: UUID, data) -> Optional[Autor]:
-    autor = obtener_autor_por_id(id_autor)
+def actualizar_autor(db: Session, id_autor: UUID, data: AutorUpdate) -> Optional[Autor]:
+    autor = obtener_autor_por_id(db, id_autor)
+
     if not autor:
         return None
 
     for key, value in data.model_dump(exclude_unset=True).items():
+        if isinstance(value, str):
+            value = value.strip().title()
+
         setattr(autor, key, value)
 
     db.commit()
@@ -39,6 +42,7 @@ def actualizar_autor(db: Session, id_autor: UUID, data) -> Optional[Autor]:
 
 def eliminar_autor(db: Session, id_autor: UUID) -> bool:
     autor = obtener_autor_por_id(db, id_autor)
+
     if not autor:
         return False
 

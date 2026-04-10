@@ -4,7 +4,6 @@ from uuid import UUID
 from datetime import datetime
 
 
-# clase base
 class EjemplarBase(BaseModel):
     id_libro: UUID
     codigo_barra: str = Field(..., min_length=3, max_length=30)
@@ -17,13 +16,11 @@ class EjemplarBase(BaseModel):
         return value.strip()
 
 
-# crearEjemplar
-class CreateEjemplar(EjemplarBase):
+class EjemplarCreate(EjemplarBase):
     id_usuario_crea: Optional[UUID]
 
 
-# actualizar ejemplar
-class updateEjemplar(BaseModel):
+class EjemplarUpdate(BaseModel):
     id_libro: Optional[UUID] = None
     codigo_barra: Optional[str] = None
     estado: Optional[str] = None
@@ -31,10 +28,9 @@ class updateEjemplar(BaseModel):
     id_usuario_edita: UUID
 
 
-# Clase respuesta
 class EjemplarResponse(EjemplarBase):
     id_ejemplar: UUID
     fecha_creacion: Optional[datetime]
 
-    class config:
+    class Config:
         from_attributes = True

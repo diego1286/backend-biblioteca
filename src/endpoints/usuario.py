@@ -4,7 +4,13 @@ from uuid import UUID
 
 from src.database.config import get_db
 from src.schemas.Usuario import UsuarioCreate, UsuarioUpdate, UsuarioResponse
-from src.crud.Usuario import *
+from src.crud.Usuario import (
+    crear_usuario,
+    obtener_usuarios,
+    obtener_usuario_por_id,
+    actualizar_usuario,
+    eliminar_usuario,
+)
 
 router = APIRouter(prefix="/usuarios", tags=["Usuarios"])
 

@@ -13,10 +13,14 @@ from dotenv import load_dotenv
 from sqlalchemy.exc import OperationalError
 
 import src.entities.Autor
+import src.entities.Categoria
+import src.entities.Editorial
 import src.entities.Ejemplar
 import src.entities.Libro
 import src.entities.Prestamo
 import src.entities.Usuario
+import src.entities.DetallePrestamo
+import src.entities.LibroAutor
 from src.database.config import create_tables
 
 

@@ -3,11 +3,11 @@ from uuid import UUID
 from sqlalchemy.orm import Session
 
 from src.entities.Ejemplar import Ejemplar
-from src.schemas.Ejemplar import CreateEjemplar, updateEjemplar
+from src.schemas.Ejemplar import EjemplarCreate, EjemplarUpdate
 
 
 # Crear ejemplar
-def crear_Ejemplar(db: Session, data: CreateEjemplar) -> Ejemplar:
+def crear_Ejemplar(db: Session, data: EjemplarCreate) -> Ejemplar:
     # Validar Codigo de barras
     existe = (
         db.query(Ejemplar).filter(Ejemplar.codigo_barra == data.codigo_barra).first()
@@ -34,32 +34,41 @@ def obtener_ejemplares(db: Session) -> List[Ejemplar]:
 
 # Actualizar ejemplar
 def actualizar_ejemplar(
-    db: Session, id_ejemplar: UUID, data: updateEjemplar
+    db: Session, id_ejemplar: UUID, data: EjemplarUpdate
 ) -> Optional[Ejemplar]:
+
     ejemplar = obtener_ejemplar_por_id(db, id_ejemplar)
     if not ejemplar:
         return None
 
-    actualizar_datos = data.model_dump(exclude_unset=True)
+    update_data = data.model_dump(exclude_unset=True)
 
-    if "codigo_barra" in actualizar_datos:
+    if "codigo_barra" in update_data:
+        nuevo_codigo = update_data["codigo_barra"].strip()
+
         existe = (
             db.query(Ejemplar)
             .filter(
-                Ejemplar.codigo_barra == actualizar_datos["codigoa_barra"],
+                Ejemplar.codigo_barra == nuevo_codigo,
                 Ejemplar.id_ejemplar != id_ejemplar,
             )
             .first()
         )
-        if existe:
-            raise ValueError("El codigo de barra ya esta registrado")
 
-    for key, value in actualizar_datos.items():
+        if existe:
+            raise ValueError("El codigo de barra ya está registrado")
+
+        update_data["codigo_barra"] = nuevo_codigo
+
+    for key, value in update_data.items():
         if isinstance(value, str):
             value = value.strip()
+
         setattr(ejemplar, key, value)
+
     db.commit()
     db.refresh(ejemplar)
+
     return ejemplar
 
 

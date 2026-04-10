@@ -7,6 +7,7 @@ import uuid
 from sqlalchemy import Column, DateTime, String, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.sql import func
+from sqlalchemy.orm import relationship
 
 from src.database.config import Base
 
@@ -34,3 +35,6 @@ class Autor(Base):
     fecha_creacion = Column(DateTime(timezone=True), server_default=func.now())
 
     fecha_edicion = Column(DateTime(timezone=True), onupdate=func.now())
+
+    # RELACIÓN MUCHOS A MUCHOS
+    libros = relationship("Libro", secondary="libro_autor", back_populates="autores")

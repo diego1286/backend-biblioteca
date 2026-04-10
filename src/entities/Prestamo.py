@@ -7,6 +7,7 @@ import uuid
 from sqlalchemy import Column, Date, String, ForeignKey, DateTime
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.sql import func
+from sqlalchemy.orm import relationship
 
 from src.database.config import Base
 
@@ -39,3 +40,5 @@ class Prestamo(Base):
 
     fecha_creacion = Column(DateTime(timezone=True), server_default=func.now())
     fecha_edicion = Column(DateTime(timezone=True), onupdate=func.now())
+
+    usuario = relationship("Usuario")
