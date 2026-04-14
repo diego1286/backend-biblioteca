@@ -1,6 +1,7 @@
 from typing import List, Optional
 from uuid import UUID
 from sqlalchemy.orm import Session
+from fastapi import HTTPException
 
 from src.entities.Ejemplar import Ejemplar
 from src.schemas.Ejemplar import EjemplarCreate, EjemplarUpdate
@@ -8,18 +9,20 @@ from src.schemas.Ejemplar import EjemplarCreate, EjemplarUpdate
 
 # Crear ejemplar
 def crear_Ejemplar(db: Session, data: EjemplarCreate) -> Ejemplar:
-    # Validar Codigo de barras
     existe = (
         db.query(Ejemplar).filter(Ejemplar.codigo_barra == data.codigo_barra).first()
     )
 
     if existe:
-        raise ValueError("El codigo de barra ya existe")
+        raise HTTPException(status_code=400, detail="El codigo de barra ya existe")
+
     ejemplar = Ejemplar(**data.model_dump())
 
     db.add(ejemplar)
     db.commit()
     db.refresh(ejemplar)
+
+    return ejemplar
 
 
 # obtener ejemplar por id

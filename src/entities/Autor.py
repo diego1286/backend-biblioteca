@@ -37,4 +37,5 @@ class Autor(Base):
     fecha_edicion = Column(DateTime(timezone=True), onupdate=func.now())
 
     # RELACIÓN MUCHOS A MUCHOS
-    libros = relationship("Libro", secondary="libro_autor", back_populates="autores")
+    libro_autores = relationship("LibroAutor", back_populates="autor")
+    libros = relationship("Libro", secondary="libro_autor", viewonly=True)

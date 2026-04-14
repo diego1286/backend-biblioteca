@@ -22,7 +22,10 @@ class Libro(Base):
     isbn = Column(String(50), nullable=False, unique=True)
     anio_publicacion = Column(Integer, nullable=False)
 
-    id_editorial = Column(Integer, ForeignKey("editorial.id_editorial"), nullable=True)
+    id_editorial = Column(
+        PG_UUID(as_uuid=True), ForeignKey("editorial.id_editorial"), nullable=True
+    )
+
     id_categoria = Column(
         PG_UUID(as_uuid=True), ForeignKey("categoria.id_categoria"), nullable=True
     )
@@ -40,5 +43,8 @@ class Libro(Base):
     fecha_edicion = Column(DateTime(timezone=True), onupdate=func.now())
 
     # RELACIÓN MUCHOS A MUCHOS
-    autores = relationship("Autor", secondary="libro_autor", back_populates="libros")
+    libro_autores = relationship("LibroAutor", back_populates="libro")
+    autores = relationship("Autor", secondary="libro_autor", viewonly=True)
     categoria = relationship("Categoria", back_populates="libros")
+    reservas = relationship("Reserva", back_populates="libro")
+    editorial = relationship("Editorial", back_populates="libros")
