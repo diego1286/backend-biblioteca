@@ -41,4 +41,5 @@ class Prestamo(Base):
     fecha_creacion = Column(DateTime(timezone=True), server_default=func.now())
     fecha_edicion = Column(DateTime(timezone=True), onupdate=func.now())
 
-    usuario = relationship("Usuario")
+    usuario = relationship("Usuario", foreign_keys=[id_usuario])
+    multas = relationship("Multa", back_populates="prestamo")

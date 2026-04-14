@@ -21,11 +21,14 @@ class PrestamoCreate(PrestamoBase):
 
     @field_validator("fecha_devolucion_estimada")
     @classmethod
-    def validar_fechas(cls, value, values):
-        if "fecha_prestamo" in values and value < values["fecha_prestamo"]:
+    def validar_fechas(cls, value, info):
+        fecha_prestamo = info.data.get("fecha_prestamo")
+
+        if fecha_prestamo and value < fecha_prestamo:
             raise ValueError(
                 "La fecha estimada no puede ser menor a la fecha de préstamo"
             )
+
         return value
 
 
