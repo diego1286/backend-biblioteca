@@ -4,6 +4,7 @@ Entidad LibroAutor (tabla intermedia)
 
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
+from sqlalchemy.orm import relationship
 
 from src.database.config import Base
 
@@ -18,3 +19,6 @@ class LibroAutor(Base):
     id_autor = Column(
         PG_UUID(as_uuid=True), ForeignKey("autor.id_autor"), primary_key=True
     )
+
+    libro = relationship("Libro", back_populates="libro_autores")
+    autor = relationship("Autor", back_populates="libro_autores")

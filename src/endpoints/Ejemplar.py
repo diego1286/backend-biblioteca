@@ -10,12 +10,13 @@ from src.crud.Ejemplar import *
 router = APIRouter(prefix="/ejemplares", tags=["Ejemplares"])
 
 
-@router.post("/", response_model=EjemplarResponse)
+@router.post("/", response_model=EjemplarResponse, status_code=201)
 def crear(data: EjemplarCreate, db: Session = Depends(get_db)):
     try:
-        return crear_Ejemplar(db, data)
+        ejemplar = crear_Ejemplar(db, data)
+        return ejemplar
     except ValueError as e:
-        raise HTTPException(400, str(e))
+        raise HTTPException(status_code=400, detail=str(e))
 
 
 @router.get("/", response_model=list[EjemplarResponse])

@@ -7,6 +7,7 @@ import uuid
 from sqlalchemy import Boolean, Column, DateTime, String
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.sql import func
+from sqlalchemy.orm import relationship
 
 from src.database.config import Base
 
@@ -26,3 +27,12 @@ class Usuario(Base):
 
     fecha_creacion = Column(DateTime(timezone=True), server_default=func.now())
     fecha_edicion = Column(DateTime(timezone=True), onupdate=func.now())
+    reservas = relationship(
+        "Reserva", foreign_keys="Reserva.id_usuario", back_populates="usuario"
+    )
+    empleado = relationship(
+        "Empleado",
+        back_populates="usuario",
+        uselist=False,
+        foreign_keys="Empleado.id_usuario",
+    )
