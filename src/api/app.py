@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 import src.entities.Autor
 import src.entities.Categoria
@@ -27,8 +28,18 @@ from src.endpoints import Editorial
 from src.endpoints import Empleado
 from src.endpoints import Categoria
 
-
 app = FastAPI(title="Api Biblioteca", version="1.0.0")
+
+# ---------------- CORS ----------------
+origins = ["https://biblioteca-backend-de011.web.app", "http://localhost:4200"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Rutas
 app.include_router(Autor.router)
